@@ -62,7 +62,6 @@ public class MobileCameraAccess : MonoBehaviour
     void OnEnable()
     {
         cameraManager.frameReceived += OnCameraFrameReceived;
-        cameraAccessStateText.text = "OnEnable";
     }
 
     void OnDisable()
@@ -74,7 +73,6 @@ public class MobileCameraAccess : MonoBehaviour
     {
         if (currentTimer >= targetTimer)
         {
-            cameraAccessStateText.text = "Loading image...";
             if (cameraManager.TryAcquireLatestCpuImage(out XRCpuImage image))
             {
                 using (image)

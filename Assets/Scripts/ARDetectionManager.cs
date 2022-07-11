@@ -65,7 +65,6 @@ public class ARDetectionManager : MonoBehaviour
     {
         // ws = new WebSocket("ws://localhost:8000/ws");
         // ws.Connect();
-        MobileCameraAccess.cameraAccessStateText.text = "Awake...";
     }
     // Start is called before the first frame update
     void Start()
@@ -84,7 +83,6 @@ public class ARDetectionManager : MonoBehaviour
         //     Debug.Log(dataConfidence[0]);
         //     Debug.Log(dataBoxes[0, 1]);
         // };
-        MobileCameraAccess.cameraAccessStateText.text = "started...";
         predictMode = false;
     }
 
@@ -92,7 +90,6 @@ public class ARDetectionManager : MonoBehaviour
     void Update()
     {
         currentTimer += Time.deltaTime;
-        MobileCameraAccess.cameraAccessStateText.text = "Updating...";
         if (currentTimer >= targetTimer)
         {
             // if (ws == null)
@@ -105,13 +102,12 @@ public class ARDetectionManager : MonoBehaviour
                 var imageStream = MobileCameraAccess.M_Texture.EncodeToPNG();
                 if (imageStream == null)
                 {
-                    MobileCameraAccess.cameraAccessStateText.text = "Null Image";
                     return;
                 }
                 else
                 {
                     WWWForm form = new WWWForm();
-                    APIController apiController = new APIController();
+                    // APIController apiController = new APIController();
                     form.AddBinaryData("file", imageStream);
 
                     // ModelName.text = predictMode == true? "/predict" : "/predict-tiny";
@@ -128,10 +124,11 @@ public class ARDetectionManager : MonoBehaviour
 
     void Callback(PredictResponse response)
     {
-        m_ClassText.text = response.classes[0];
-        m_ConfidenceText.text = response.confidences[0].ToString();
+        Debug.Log("response callback => "+ response.classes[0]);
+        // m_ClassText.text = response.classes[0];
+        // m_ConfidenceText.text = response.confidences[0].ToString();
         
-        MobileCameraAccess.cameraAccessStateText.text = "";
+        // MobileCameraAccess.cameraAccessStateText.text = "";
     }
 
     public void pressButton()
@@ -163,13 +160,18 @@ public class ARDetectionManager : MonoBehaviour
             MobileCameraAccess.cameraAccessStateText.text = request.error;
 
         }
-        string resp = System.Text.Encoding.UTF8.GetString(request.downloadHandler.data);
+        string resp = request.downloadHandler.text;
+        // MobileCameraAccess.cameraAccessStateText.text = request.downloadHandler.text;
         m_BoxText.text = request.downloadHandler.text;
-        JSONNode wsInfo = JSON.Parse(request.downloadHandler.text);
+        JSONNode wsInfo = JSON.Parse(resp);
+        Debug.Log("request data => " + resp);
+
         string[] dataClass = Helper.getNestedDataJsonString(wsInfo, "classes");
         float[] dataConfidence = Helper.getNestedDataJsonFloat(wsInfo, "confidences");
         float[,] dataBoxes = Helper.getDoubleNestedDataJsonFloat(wsInfo, "boxes");
-        MobileCameraAccess.cameraAccessStateText.text = "Image was sent to API...";
+        string errorData = wsInfo["error"];
+        Debug.Log("class data => " + wsInfo);
+        Debug.Log("error data => " + errorData);
 
         cb(JsonUtility.FromJson<PredictResponse>(resp));
     }

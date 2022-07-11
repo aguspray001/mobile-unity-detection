@@ -9,5 +9,6 @@ EditorBuildSettings:
     path: Assets/Scenes/PlacementAndPlaneDetection.unity
     guid: 132d7a7ef53e5d249a8687bfa4b3f4ce
   m_configObjects:
+    AR Foundation RemoteARFoundationRemoteLoaderSettings: {fileID: 11400000, guid: 45cb6bac43e09484dba4081bfa9a8404, type: 2}
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 972690f7a3c5f8748b108b35287f8102, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 85838c87b4453c24e95e9ef1b83e0383, type: 2}
